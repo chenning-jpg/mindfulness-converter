@@ -6,7 +6,7 @@ import AuthScreen from './components/AuthScreen';
 import { useAuth } from './context/AuthContext';
 import { createChatSession, extractWisdom, type ChatSession } from './services/deepseekService';
 import * as supabaseData from './services/supabaseData';
-import { ArrowUp, Sparkles, Send, X, RefreshCw, User, Lock, ExternalLink, Leaf, Timer, Sprout, Gift, HeartHandshake, Archive, Plus, Download, Loader2 } from 'lucide-react';
+import { ArrowUp, Sparkles, Send, X, RefreshCw, User, Lock, ExternalLink, Leaf, Timer, Sprout, Gift, HeartHandshake, Archive, Plus, Download, Loader2, Menu } from 'lucide-react';
 import html2canvas from 'html2canvas';
 
 const hasSupabase = Boolean(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY);
@@ -38,6 +38,7 @@ const MOCK_COMMUNITY_FRUITS: CommunityFruit[] = [
 export default function App() {
   const { user, loading: authLoading, signIn, signUp, signOut } = useAuth();
   const [dataLoading, setDataLoading] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const [view, setView] = useState<AppView>(AppView.FOREST);
   const [trees, setTrees] = useState<Tree[]>(INITIAL_TREES);
@@ -416,7 +417,7 @@ export default function App() {
   // --- VIEWS ---
 
   const ForestView = () => (
-    <div className="min-h-screen bg-[#ffffff] pb-12 pt-16 px-12 ml-[260px]">
+    <div className="min-h-screen bg-[#ffffff] pb-12 pt-20 lg:pt-16 px-6 md:px-12 lg:ml-[260px] transition-all duration-300">
       <header className="mb-10 fade-in">
         <h1 className="text-4xl font-extrabold text-[#111827] mb-3 leading-tight tracking-tight">
           你好，你的心灵之森。
@@ -512,7 +513,7 @@ export default function App() {
   );
 
   const ChatView = () => (
-    <div className="h-screen flex flex-col bg-[#ffffff] ml-[260px]">
+    <div className="h-screen flex flex-col bg-[#ffffff] lg:ml-[260px] transition-all duration-300 pt-16 lg:pt-0">
       <div className="px-12 py-10 border-b border-stone-100 bg-white/50 backdrop-blur-md sticky top-0 z-10">
         <h2 className="text-2xl font-black text-[#111827]">心境转化</h2>
         <p className="text-stone-500 font-medium text-sm mt-1">将压力重构为向上的力量。</p>
@@ -593,8 +594,8 @@ export default function App() {
   );
 
   const ArchiveView = () => (
-    <div className="min-h-screen bg-[#ffffff] p-16 ml-[260px]">
-      <h2 className="text-4xl font-black text-[#111827] mb-12 leading-tight">智慧档案库</h2>
+    <div className="min-h-screen bg-[#ffffff] p-6 md:p-16 pt-20 lg:pt-16 lg:ml-[260px] transition-all duration-300">
+      <h2 className="text-4xl font-black text-[#111827] mb-8 lg:mb-12 leading-tight">智慧档案库</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {wisdomArchive.map((w: Wisdom, idx: number) => {
           const colors = ['bg-[#E1F5FE]', 'bg-[#F3E5F5]', 'bg-[#FFF9C4]', 'bg-[#E3F2E1]'];
@@ -622,7 +623,7 @@ export default function App() {
   );
 
   const MarketView = () => (
-    <div className="min-h-screen bg-[#ffffff] p-16 ml-[260px]">
+    <div className="min-h-screen bg-[#ffffff] p-6 md:p-16 pt-20 lg:pt-16 lg:ml-[260px] transition-all duration-300">
       <header className="mb-12">
         <div className="flex justify-between items-end mb-6">
           <div>
@@ -690,7 +691,24 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen bg-[#ffffff] text-[#111827]">
-      <Navigation currentView={view} setView={setView} inventory={inventory} userEmail={user?.email} onSignOut={hasSupabase ? signOut : undefined} />
+      <Navigation
+        currentView={view}
+        setView={setView}
+        inventory={inventory}
+        userEmail={user?.email}
+        onSignOut={hasSupabase ? signOut : undefined}
+        isMobileMenuOpen={isMobileMenuOpen}
+        setIsMobileMenuOpen={setIsMobileMenuOpen}
+      />
+
+      {/* Mobile Header */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-stone-100 z-30 flex items-center px-4 justify-between">
+        <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 -ml-2 text-[#111827]">
+          <Menu size={24} />
+        </button>
+        <span className="font-black text-lg text-[#111827]">心灵转化</span>
+        <div className="w-8"></div> {/* Spacer for balance */}
+      </div>
 
       <main className="flex-1 relative overflow-hidden">
         {view === AppView.FOREST && ForestView()}
