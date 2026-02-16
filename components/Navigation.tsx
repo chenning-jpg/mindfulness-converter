@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { AppView } from '../types';
-import { Leaf, BookOpen, Store, Plus, History, User, LogOut } from 'lucide-react';
+import { Leaf, BookOpen, Store, Plus, History, User, LogOut, X } from 'lucide-react';
 
 interface NavigationProps {
   currentView: AppView;
@@ -9,9 +9,19 @@ interface NavigationProps {
   inventory: number;
   userEmail?: string | null;
   onSignOut?: () => void;
+  isMobileMenuOpen: boolean;
+  setIsMobileMenuOpen: (isOpen: boolean) => void;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ currentView, setView, inventory, userEmail, onSignOut }) => {
+const Navigation: React.FC<NavigationProps> = ({
+  currentView,
+  setView,
+  inventory,
+  userEmail,
+  onSignOut,
+  isMobileMenuOpen,
+  setIsMobileMenuOpen
+}) => {
   const navItems = [
     { view: AppView.FOREST, icon: Leaf, label: '我的森林' },
     { view: AppView.ARCHIVE, icon: BookOpen, label: '智慧档案' },
