@@ -13,7 +13,9 @@ View your app in AI Studio: https://ai.studio/apps/drive/1Z4nH5OuF_GwsMQ652MwMQ9
 **Prerequisites:**  Node.js
 
 1. 安装依赖：`npm install`
-2. 在项目根目录创建 `.env.local`，填入 DeepSeek API Key：`DEEPSEEK_API_KEY=你的DeepSeek密钥`（可在 [DeepSeek 开放平台](https://platform.deepseek.com/api_keys) 获取）
+2. 在项目根目录创建 `.env.local`，参考 `.env.example` 填入：
+   - `DEEPSEEK_API_KEY`：DeepSeek API 密钥（[获取](https://platform.deepseek.com/api_keys)）
+   - `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY`：Supabase 项目 URL 与 anon key（见下方 Supabase 配置）
 3. 运行应用：
    - **完整开发（含 API 代理）**：`npm run dev`（需安装 Vercel CLI）
    - **仅前端**：`npm run dev:vite`
@@ -22,8 +24,20 @@ View your app in AI Studio: https://ai.studio/apps/drive/1Z4nH5OuF_GwsMQ652MwMQ9
 
 1. 将项目推送到 GitHub
 2. 在 [Vercel](https://vercel.com) 导入项目
-3. 在 Vercel 项目 **Settings → Environment Variables** 中添加：`DEEPSEEK_API_KEY` = 你的 DeepSeek API Key
+3. 在 Vercel 项目 **Settings → Environment Variables** 中添加：
+   - `DEEPSEEK_API_KEY` = 你的 DeepSeek API Key
+   - `VITE_SUPABASE_URL` = Supabase 项目 URL
+   - `VITE_SUPABASE_ANON_KEY` = Supabase anon key
 4. 点击 **Deploy** 部署
+
+## Supabase 配置（用户登录与云端数据）
+
+1. 在 [Supabase](https://supabase.com) 创建项目，记下 **Settings → API** 中的 Project URL 和 `anon` public key。
+2. 在 Supabase 控制台打开 **SQL Editor**，执行 `supabase/migrations/001_initial.sql` 中的 SQL，创建表并启用 RLS。
+3. 在 **Authentication → Providers** 中启用 Email，如需可关闭 “Confirm email” 以便本地快速测试。
+4. 将 `VITE_SUPABASE_URL` 和 `VITE_SUPABASE_ANON_KEY` 填入本地 `.env.local` 与 Vercel 环境变量。
+
+未配置 Supabase 时，应用仍可本地运行，但不会显示登录页，数据仅保存在本地。
 
 ## 树木多样性系统
 

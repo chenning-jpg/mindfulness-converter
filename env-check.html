@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Environment Check</title>
+</head>
+<body>
+    <h1>Environment Variables Check</h1>
+    <div id="output"></div>
+    <script type="module">
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+        
+        const output = document.getElementById('output');
+        output.innerHTML = `
+            <p><strong>VITE_SUPABASE_URL:</strong> ${supabaseUrl ? '✅ Configured' : '❌ Not configured'}</p>
+            <p><strong>VITE_SUPABASE_ANON_KEY:</strong> ${supabaseKey ? '✅ Configured' : '❌ Not configured'}</p>
+            <p><strong>URL Value:</strong> ${supabaseUrl || 'undefined'}</p>
+            <p><strong>Key Value:</strong> ${supabaseKey ? supabaseKey.substring(0, 20) + '...' : 'undefined'}</p>
+        `;
+    </script>
+</body>
+</html>

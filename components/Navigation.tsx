@@ -1,15 +1,17 @@
 
 import React from 'react';
 import { AppView } from '../types';
-import { Leaf, MessageCircleHeart, BookOpen, Store, Plus, History, Settings, User } from 'lucide-react';
+import { Leaf, BookOpen, Store, Plus, History, User, LogOut } from 'lucide-react';
 
 interface NavigationProps {
   currentView: AppView;
   setView: (view: AppView) => void;
   inventory: number;
+  userEmail?: string | null;
+  onSignOut?: () => void;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ currentView, setView, inventory }) => {
+const Navigation: React.FC<NavigationProps> = ({ currentView, setView, inventory, userEmail, onSignOut }) => {
   const navItems = [
     { view: AppView.FOREST, icon: Leaf, label: '我的森林' },
     { view: AppView.ARCHIVE, icon: BookOpen, label: '智慧档案' },
@@ -89,16 +91,20 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, setView, inventory
            </div>
         </div>
 
-        <button className="w-full flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-[#2b2b2b] transition-colors group">
-          <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400">
+        <div className="w-full flex items-center gap-3 px-3 py-3 rounded-lg group">
+          <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
              <User size={18} />
           </div>
-          <div className="flex flex-col items-start">
-             <span className="text-sm font-semibold">冥想行者</span>
+          <div className="flex flex-col items-start min-w-0 flex-1">
+             <span className="text-sm font-semibold truncate w-full">{userEmail || "冥想行者"}</span>
              <span className="text-[10px] text-white/30 font-bold uppercase tracking-widest leading-none mt-0.5">Free Plan</span>
           </div>
-          <Settings size={16} className="ml-auto text-white/20 group-hover:text-white" />
-        </button>
+          {onSignOut && (
+            <button onClick={onSignOut} className="p-2 rounded-lg hover:bg-white/10 text-white/40 hover:text-white shrink-0" title="退出登录">
+              <LogOut size={16} />
+            </button>
+          )}
+        </div>
       </div>
     </aside>
   );

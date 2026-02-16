@@ -1,11 +1,15 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { AppView, Message, Tree, Wisdom, CommunityFruit, TREE_SPECIES_DB, FREE_UNLOCKED_SPECIES, TreeType, TreeRarity, EmotionTag } from './types';
 import Navigation from './components/Navigation';
 import TreeVisual from './components/TreeVisual';
+import AuthScreen from './components/AuthScreen';
+import { useAuth } from './context/AuthContext';
 import { createChatSession, extractWisdom, type ChatSession } from './services/deepseekService';
-import { ArrowUp, Sparkles, Send, X, RefreshCw, User, Lock, ExternalLink, Leaf, Timer, Sprout, Gift, HeartHandshake, Archive, Plus, Download } from 'lucide-react';
+import * as supabaseData from './services/supabaseData';
+import { ArrowUp, Sparkles, Send, X, RefreshCw, User, Lock, ExternalLink, Leaf, Timer, Sprout, Gift, HeartHandshake, Archive, Plus, Download, Loader2 } from 'lucide-react';
 import html2canvas from 'html2canvas';
+
+const hasSupabase = Boolean(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY);
 
 const INITIAL_TREES: Tree[] = [
   {
@@ -32,6 +36,9 @@ const MOCK_COMMUNITY_FRUITS: CommunityFruit[] = [
 ];
 
 export default function App() {
+  const { user, loading: authLoading, signIn, signUp, signOut } = useAuth();
+  const [dataLoading, setDataLoading] = useState(true);
+
   const [view, setView] = useState<AppView>(AppView.FOREST);
   const [trees, setTrees] = useState<Tree[]>(INITIAL_TREES);
   const [wisdomArchive, setWisdomArchive] = useState<Wisdom[]>(INITIAL_WISDOM);
@@ -56,8 +63,48 @@ export default function App() {
 
   // 树木多样性系统状态
   const [unlockedSpecies, setUnlockedSpecies] = useState<TreeType[]>(FREE_UNLOCKED_SPECIES);
-  const [userHasSpeedBoost, setUserHasSpeedBoost] = useState(false); // 是否拥有加速包
-  const [purchasedSpecies, setPurchasedSpecies] = useState<TreeType[]>([]); // 已购买的稀有树种
+  const [userHasSpeedBoost, setUserHasSpeedBoost] = useState(false);
+  const [purchasedSpecies, setPurchasedSpecies] = useState<TreeType[]>([]);
+
+  // 未配置 Supabase 或已登录：不显示登录页
+  const showAuth = hasSupabase && !user;
+  const showApp = !hasSupabase || !!user;
+
+  // 登录后从 Supabase 加载用户数据
+  useEffect(() => {
+    if (!user?.id) {
+      setDataLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setDataLoading(true);
+    (async () => {
+      try {
+        await supabaseData.ensureUserStatsRow(user.id);
+        const [wisdomList, treesList, userStats] = await Promise.all([
+          supabaseData.fetchWisdom(user.id),
+          supabaseData.fetchTrees(user.id),
+          supabaseData.fetchUserStats(user.id),
+        ]);
+        if (cancelled) return;
+        if (wisdomList.length > 0) setWisdomArchive(wisdomList);
+        if (treesList.length > 0) setTrees(treesList);
+        if (userStats) {
+          setInventory(userStats.inventory);
+          setStats((s) => ({ ...s, collected: userStats.collected }));
+          setUnlockedSpecies((userStats.unlocked_species as TreeType[]) || FREE_UNLOCKED_SPECIES);
+          setPurchasedSpecies((userStats.purchased_species as TreeType[]) || []);
+          setUserHasSpeedBoost(userStats.has_speed_boost);
+          setMyCollection(Array.isArray(userStats.my_collection) ? userStats.my_collection : []);
+        }
+      } catch (e) {
+        console.error("Load user data failed", e);
+      } finally {
+        if (!cancelled) setDataLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [user?.id]);
 
   // 树木多样性辅助函数
   const getStageDuration = (tree: Tree): number => {
@@ -67,6 +114,17 @@ export default function App() {
 
     return baseDuration * speedMultiplier * speciesMultiplier;
   };
+
+  if (authLoading || (showApp && dataLoading)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F2F4F6]">
+        <Loader2 size={40} className="animate-spin text-emerald-600" />
+      </div>
+    );
+  }
+  if (showAuth) {
+    return <AuthScreen onSignIn={signIn} onSignUp={signUp} />;
+  }
 
   // 根据智慧内容推荐树种
   const getRecommendedSpecies = (wisdom: Wisdom): TreeType => {
@@ -144,6 +202,15 @@ export default function App() {
       }]);
     }
   }, []);
+
+  // 防抖同步树木状态到 Supabase
+  useEffect(() => {
+    if (!user?.id || trees.length === 0) return;
+    const t = setTimeout(() => {
+      supabaseData.syncAllTrees(user.id, trees).catch(console.error);
+    }, 3000);
+    return () => clearTimeout(t);
+  }, [user?.id, trees]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -255,6 +322,19 @@ export default function App() {
         timestamp: Date.now()
       }]);
 
+      if (user?.id) {
+        try {
+          await supabaseData.insertWisdom(user.id, newWisdomEntry);
+          if (newTree) await supabaseData.insertTree(user.id, newTree);
+          else {
+            const fallbackTree = createNewTree(newWisdomEntry.id, 'oak');
+            if (fallbackTree) await supabaseData.insertTree(user.id, fallbackTree);
+          }
+        } catch (err) {
+          console.error("Sync wisdom/tree failed", err);
+        }
+      }
+
       setShowWisdomModal(true);
     } catch (e) {
       const msg = e instanceof Error ? e.message : "生成失败，请稍后重试";
@@ -267,8 +347,13 @@ export default function App() {
   const harvestFruit = (treeId: string) => {
     setTrees((prev: Tree[]) => prev.map((t: Tree) => {
       if (t.id === treeId && t.stage === 'fruiting') {
-        setInventory((inv: number) => inv + 1);
-        return { ...t, stage: 'mature', stageStartedAt: Date.now(), hasProduced: false };
+        const updated = { ...t, stage: 'mature' as const, stageStartedAt: Date.now(), hasProduced: false };
+        setInventory((inv: number) => {
+          if (user?.id) supabaseData.upsertUserStats(user.id, { inventory: inv + 1 }).catch(console.error);
+          return inv + 1;
+        });
+        if (user?.id) supabaseData.updateTree(user.id, updated).catch(console.error);
+        return updated;
       }
       return t;
     }));
@@ -276,18 +361,26 @@ export default function App() {
 
   const tradeFruit = (fruit: CommunityFruit) => {
     if (inventory >= fruit.cost) {
-      setInventory((prev: number) => prev - fruit.cost);
+      const newInv = inventory - fruit.cost;
+      const newCollected = stats.collected + 1;
+      setInventory(newInv);
       setMyCollection((prev: CommunityFruit[]) => [...prev, fruit]);
       setCommunityInventory((prev: CommunityFruit[]) => prev.filter((f: CommunityFruit) => f.id !== fruit.id));
-      setStats((prev: { collected: number }) => ({ ...prev, collected: prev.collected + 1 }));
+      setStats((prev: { collected: number }) => ({ ...prev, collected: newCollected }));
 
-      // 创建友谊树 (樱花树)
       const friendshipTree = createNewTree(fruit.id, 'cherry');
       if (friendshipTree) {
         setTrees((prev: Tree[]) => [...prev, friendshipTree]);
+        if (user?.id) supabaseData.insertTree(user.id, friendshipTree).catch(console.error);
+      }
+      if (user?.id) {
+        supabaseData.upsertUserStats(user.id, {
+          inventory: newInv,
+          collected: newCollected,
+          my_collection: [...myCollection, fruit],
+        }).catch(console.error);
       }
       
-      // Trigger Celebration Animation
       setIsCelebrating(true);
       setTimeout(() => {
         setIsCelebrating(false);
@@ -568,7 +661,7 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen bg-[#ffffff] text-[#111827]">
-      <Navigation currentView={view} setView={setView} inventory={inventory} />
+      <Navigation currentView={view} setView={setView} inventory={inventory} userEmail={user?.email} onSignOut={hasSupabase ? signOut : undefined} />
       
       <main className="flex-1 relative overflow-hidden">
         {view === AppView.FOREST && ForestView()}
