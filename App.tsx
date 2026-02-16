@@ -55,7 +55,7 @@ export default function App() {
   const [communityInventory, setCommunityInventory] = useState<CommunityFruit[]>(MOCK_COMMUNITY_FRUITS);
   const [myCollection, setMyCollection] = useState<CommunityFruit[]>([]);
   const [isCelebrating, setIsCelebrating] = useState(false);
-  
+
   const [inventory, setInventory] = useState(0);
   const [stats, setStats] = useState({
     collected: 0
@@ -115,16 +115,7 @@ export default function App() {
     return baseDuration * speedMultiplier * speciesMultiplier;
   };
 
-  if (authLoading || (showApp && dataLoading)) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F2F4F6]">
-        <Loader2 size={40} className="animate-spin text-emerald-600" />
-      </div>
-    );
-  }
-  if (showAuth) {
-    return <AuthScreen onSignIn={signIn} onSignUp={signUp} />;
-  }
+
 
   // 根据智慧内容推荐树种
   const getRecommendedSpecies = (wisdom: Wisdom): TreeType => {
@@ -238,7 +229,7 @@ export default function App() {
           }
 
           if (tree.stage === 'fruiting' && !tree.hasProduced) {
-             return { ...tree, hasProduced: true };
+            return { ...tree, hasProduced: true };
           }
 
           if (shouldUpdate) {
@@ -313,7 +304,7 @@ export default function App() {
 
       setWisdomArchive((prev: Wisdom[]) => [newWisdomEntry, ...prev]);
       setNewWisdom(newWisdomEntry);
-      
+
       chatSessionRef.current = createChatSession();
       setMessages([{
         id: Date.now().toString(),
@@ -380,7 +371,7 @@ export default function App() {
           my_collection: [...myCollection, fruit],
         }).catch(console.error);
       }
-      
+
       setIsCelebrating(true);
       setTimeout(() => {
         setIsCelebrating(false);
@@ -410,6 +401,18 @@ export default function App() {
     }
   };
 
+  // Check auth/loading state AFTER all hooks are declared
+  if (authLoading || (showApp && dataLoading)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F2F4F6]">
+        <Loader2 size={40} className="animate-spin text-emerald-600" />
+      </div>
+    );
+  }
+  if (showAuth) {
+    return <AuthScreen onSignIn={signIn} onSignUp={signUp} />;
+  }
+
   // --- VIEWS ---
 
   const ForestView = () => (
@@ -420,7 +423,7 @@ export default function App() {
         </h1>
         <p className="text-stone-500 font-medium text-lg">愿你在静默的生长中找到力量。</p>
       </header>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Bento Stats Group */}
         <div className="lg:col-span-1 space-y-6 fade-in">
@@ -458,16 +461,16 @@ export default function App() {
                 <div key={tree.id} className="flex flex-col items-center group relative">
                   {tree.type === 'cherry' && (
                     <div className="absolute -top-4 bg-pink-100 text-pink-500 p-1.5 rounded-full opacity-80 animate-bounce">
-                       <HeartHandshake size={14} />
+                      <HeartHandshake size={14} />
                     </div>
                   )}
-                  <TreeVisual 
-                    tree={tree} 
+                  <TreeVisual
+                    tree={tree}
                     onClick={() => {
                       if (tree.stage === 'fruiting') {
                         harvestFruit(tree.id);
                       }
-                    }} 
+                    }}
                   />
                   <span className="mt-3 text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all text-center text-stone-400 bg-white/90 px-3 py-1.5 rounded-2xl shadow-sm border border-stone-100">
                     {label}
@@ -484,10 +487,10 @@ export default function App() {
   const ChatView = () => (
     <div className="h-screen flex flex-col bg-[#ffffff] ml-[260px]">
       <div className="px-12 py-10 border-b border-stone-100 bg-white/50 backdrop-blur-md sticky top-0 z-10">
-         <h2 className="text-2xl font-black text-[#111827]">心境转化</h2>
-         <p className="text-stone-500 font-medium text-sm mt-1">将压力重构为向上的力量。</p>
+        <h2 className="text-2xl font-black text-[#111827]">心境转化</h2>
+        <p className="text-stone-500 font-medium text-sm mt-1">将压力重构为向上的力量。</p>
       </div>
-      
+
       {chatError && (
         <div className="mx-12 mt-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center justify-between text-red-700 text-sm">
           <span>{chatError}</span>
@@ -503,24 +506,23 @@ export default function App() {
             className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`max-w-[70%] p-6 rounded-[1.5rem] text-[15px] font-medium leading-relaxed shadow-sm ${
-                msg.role === 'user'
+              className={`max-w-[70%] p-6 rounded-[1.5rem] text-[15px] font-medium leading-relaxed shadow-sm ${msg.role === 'user'
                   ? 'bg-[#111827] text-white rounded-tr-sm'
                   : 'bg-[#f9fafb] text-[#111827] rounded-tl-sm border border-stone-100'
-              }`}
+                }`}
             >
               {msg.text}
             </div>
           </div>
         ))}
         {isTyping && (
-           <div className="flex justify-start">
-             <div className="bg-[#f9fafb] px-6 py-4 rounded-[1.2rem] rounded-tl-sm border border-stone-100 flex gap-2 shadow-sm">
-               <span className="w-2 h-2 bg-stone-300 rounded-full animate-bounce"></span>
-               <span className="w-2 h-2 bg-stone-300 rounded-full animate-bounce delay-75"></span>
-               <span className="w-2 h-2 bg-stone-300 rounded-full animate-bounce delay-150"></span>
-             </div>
-           </div>
+          <div className="flex justify-start">
+            <div className="bg-[#f9fafb] px-6 py-4 rounded-[1.2rem] rounded-tl-sm border border-stone-100 flex gap-2 shadow-sm">
+              <span className="w-2 h-2 bg-stone-300 rounded-full animate-bounce"></span>
+              <span className="w-2 h-2 bg-stone-300 rounded-full animate-bounce delay-75"></span>
+              <span className="w-2 h-2 bg-stone-300 rounded-full animate-bounce delay-150"></span>
+            </div>
+          </div>
         )}
         <div ref={messagesEndRef} />
       </div>
@@ -528,17 +530,17 @@ export default function App() {
       <div className="p-12">
         <div className="max-w-2xl mx-auto space-y-4">
           {messages.length > 2 && !isExtracting && (
-             <div className="flex justify-center fade-in">
-               <button 
-                  onClick={endSessionAndTransform}
-                  className="bg-[#D1FAE5] text-emerald-800 px-6 py-3 rounded-full hover:bg-[#A7F3D0] transition-all flex items-center gap-2 font-black shadow-lg shadow-emerald-900/5 hover:-translate-y-1 text-sm"
-               >
-                 <RefreshCw size={16} />
-                 结束并生成智慧结晶
-               </button>
-             </div>
+            <div className="flex justify-center fade-in">
+              <button
+                onClick={endSessionAndTransform}
+                className="bg-[#D1FAE5] text-emerald-800 px-6 py-3 rounded-full hover:bg-[#A7F3D0] transition-all flex items-center gap-2 font-black shadow-lg shadow-emerald-900/5 hover:-translate-y-1 text-sm"
+              >
+                <RefreshCw size={16} />
+                结束并生成智慧结晶
+              </button>
+            </div>
           )}
-          
+
           <div className="relative bg-[#F9FAFB] rounded-[1.5rem] p-2 flex items-center border border-stone-200">
             <input
               type="text"
@@ -570,7 +572,7 @@ export default function App() {
         {wisdomArchive.map((w: Wisdom, idx: number) => {
           const colors = ['bg-[#E1F5FE]', 'bg-[#F3E5F5]', 'bg-[#FFF9C4]', 'bg-[#E3F2E1]'];
           const bg = colors[idx % colors.length];
-          
+
           return (
             <div key={w.id} className={`${bg} p-8 rounded-[2.5rem] bento-card shadow-sm border border-stone-100/50 relative overflow-hidden group`}>
               <div className="relative z-10">
@@ -579,7 +581,7 @@ export default function App() {
                   <span className="text-[9px] font-black bg-white/60 px-2 py-1 rounded-full text-[#111827]/70 uppercase tracking-widest">{w.date}</span>
                 </div>
                 <div className="bg-white/40 p-5 rounded-2xl mb-6 backdrop-blur-md">
-                   <p className="text-xs font-bold text-[#111827]/70 line-clamp-2 italic">情境: {w.situation}</p>
+                  <p className="text-xs font-bold text-[#111827]/70 line-clamp-2 italic">情境: {w.situation}</p>
                 </div>
                 <p className="text-[16px] font-bold text-[#111827] leading-relaxed">
                   "{w.insight}"
@@ -595,12 +597,12 @@ export default function App() {
   const MarketView = () => (
     <div className="min-h-screen bg-[#ffffff] p-16 ml-[260px]">
       <header className="mb-12">
-         <div className="flex justify-between items-end mb-6">
-           <div>
-             <h2 className="text-4xl font-black text-[#111827] leading-tight mb-2">共生花园</h2>
-             <p className="text-stone-500 font-medium text-lg">交换智慧，让灵魂不再孤独。</p>
-           </div>
-         </div>
+        <div className="flex justify-between items-end mb-6">
+          <div>
+            <h2 className="text-4xl font-black text-[#111827] leading-tight mb-2">共生花园</h2>
+            <p className="text-stone-500 font-medium text-lg">交换智慧，让灵魂不再孤独。</p>
+          </div>
+        </div>
       </header>
 
       {/* My Collection Section */}
@@ -608,17 +610,17 @@ export default function App() {
         <div className="mb-12 fade-in">
           <h3 className="text-[10px] font-black text-stone-400 uppercase tracking-[0.2em] mb-6 pl-2">已解锁的共鸣</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-             {myCollection.map((fruit: CommunityFruit) => (
-               <div key={fruit.id} className="bg-[#F9FAFB] border border-stone-100 p-6 rounded-[1.5rem] flex gap-6 shadow-sm items-center">
-                  <div className="bg-pink-100 text-pink-500 w-12 h-12 rounded-xl flex items-center justify-center shrink-0">
-                    <HeartHandshake size={24} />
-                  </div>
-                  <div>
-                    <p className="text-base font-bold text-[#111827]">"{fruit.insight}"</p>
-                    <p className="text-[10px] font-black text-stone-400 mt-2 uppercase tracking-widest">— {fruit.author}</p>
-                  </div>
-               </div>
-             ))}
+            {myCollection.map((fruit: CommunityFruit) => (
+              <div key={fruit.id} className="bg-[#F9FAFB] border border-stone-100 p-6 rounded-[1.5rem] flex gap-6 shadow-sm items-center">
+                <div className="bg-pink-100 text-pink-500 w-12 h-12 rounded-xl flex items-center justify-center shrink-0">
+                  <HeartHandshake size={24} />
+                </div>
+                <div>
+                  <p className="text-base font-bold text-[#111827]">"{fruit.insight}"</p>
+                  <p className="text-[10px] font-black text-stone-400 mt-2 uppercase tracking-widest">— {fruit.author}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
@@ -631,26 +633,26 @@ export default function App() {
           return (
             <div key={fruit.id} className="bg-[#F9FAFB] p-8 rounded-[2rem] border border-stone-100 shadow-sm flex flex-col bento-card group">
               <div className="flex items-center gap-4 mb-6">
-                 <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-[#111827]">
-                    <User size={20} />
-                 </div>
-                 <div>
-                    <div className="text-base font-black text-[#111827]">{fruit.author}</div>
-                    <div className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mt-1">需 {fruit.cost} 心力</div>
-                 </div>
+                <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-[#111827]">
+                  <User size={20} />
+                </div>
+                <div>
+                  <div className="text-base font-black text-[#111827]">{fruit.author}</div>
+                  <div className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mt-1">需 {fruit.cost} 心力</div>
+                </div>
               </div>
               <div className="flex-1 bg-white/50 rounded-2xl p-8 flex items-center justify-center text-stone-300 mb-8 border border-stone-100 border-dashed">
-                 <Lock size={32} />
+                <Lock size={32} />
               </div>
-              <button 
+              <button
                 onClick={() => tradeFruit(fruit)}
                 className={`w-full py-4 rounded-xl text-sm font-black transition-all flex items-center justify-center gap-2
-                  ${canAfford 
-                    ? 'bg-[#111827] text-white shadow-lg hover:-translate-y-1 active:scale-95' 
+                  ${canAfford
+                    ? 'bg-[#111827] text-white shadow-lg hover:-translate-y-1 active:scale-95'
                     : 'bg-[#F2F4F6] text-stone-400 cursor-not-allowed'
                   }`}
               >
-                 {canAfford ? '解锁智慧果实' : '心力不足'} <ExternalLink size={16} />
+                {canAfford ? '解锁智慧果实' : '心力不足'} <ExternalLink size={16} />
               </button>
             </div>
           );
@@ -662,7 +664,7 @@ export default function App() {
   return (
     <div className="flex min-h-screen bg-[#ffffff] text-[#111827]">
       <Navigation currentView={view} setView={setView} inventory={inventory} userEmail={user?.email} onSignOut={hasSupabase ? signOut : undefined} />
-      
+
       <main className="flex-1 relative overflow-hidden">
         {view === AppView.FOREST && ForestView()}
         {view === AppView.CHAT && ChatView()}
@@ -675,11 +677,11 @@ export default function App() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none">
           <div className="absolute inset-0 bg-white/90 animate-[fadeOut_0.5s_ease-out_1.5s_forwards]" />
           <div className="relative z-10 flex flex-col items-center animate-[bounceIn_0.6s_cubic-bezier(0.175,0.885,0.32,1.275)_forwards]">
-             <div className="bg-white p-6 rounded-full shadow-2xl mb-8">
-               <HeartHandshake className="text-pink-500 w-16 h-16" />
-             </div>
-             <h2 className="text-3xl font-black text-[#111827]">共鸣达成</h2>
-             <p className="text-stone-400 font-black text-sm mt-2 tracking-widest uppercase">New friendship tree planted</p>
+            <div className="bg-white p-6 rounded-full shadow-2xl mb-8">
+              <HeartHandshake className="text-pink-500 w-16 h-16" />
+            </div>
+            <h2 className="text-3xl font-black text-[#111827]">共鸣达成</h2>
+            <p className="text-stone-400 font-black text-sm mt-2 tracking-widest uppercase">New friendship tree planted</p>
           </div>
           <style>{`
             @keyframes bounceIn {
@@ -697,7 +699,7 @@ export default function App() {
       {showWisdomModal && newWisdom && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm fade-in">
           <div ref={wisdomCardRef} className="bg-white rounded-[2.5rem] max-w-sm w-full p-10 shadow-2xl relative overflow-hidden text-center border border-stone-100">
-            <button 
+            <button
               onClick={downloadCard}
               data-html2canvas-ignore
               className="absolute top-8 right-8 text-stone-300 hover:text-[#111827] transition-colors p-2"
@@ -712,7 +714,7 @@ export default function App() {
             <p className="text-lg font-bold text-stone-700 mb-10 leading-relaxed italic">
               "{newWisdom.insight}"
             </p>
-            <button 
+            <button
               onClick={() => { setShowWisdomModal(false); setView(AppView.FOREST); }}
               data-html2canvas-ignore
               className="w-full py-4 bg-[#111827] text-white rounded-2xl text-base font-black shadow-xl hover:scale-[1.02] transition-transform"
