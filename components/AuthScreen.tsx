@@ -23,7 +23,12 @@ export default function AuthScreen({ onSignIn, onSignUp }: AuthScreenProps) {
       if (error) {
         setMessage({ type: "error", text: error.message });
       } else if (mode === "signup") {
-        setMessage({ type: "success", text: "注册成功，请查收邮件确认（若已开启邮件确认）。" });
+        // 注册成功后尝试自动登录
+        const { error: signInError } = await onSignIn(email, password);
+        if (signInError) {
+          setMessage({ type: "success", text: "注册成功，请登录。" });
+          setMode("signin");
+        }
       }
     } finally {
       setLoading(false);
