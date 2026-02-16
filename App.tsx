@@ -417,12 +417,39 @@ export default function App() {
 
   const ForestView = () => (
     <div className="min-h-screen bg-[#ffffff] pb-12 pt-16 px-12 ml-[260px]">
-      <header className="mb-12 fade-in">
+      <header className="mb-10 fade-in">
         <h1 className="text-4xl font-extrabold text-[#111827] mb-3 leading-tight tracking-tight">
           你好，你的心灵之森。
         </h1>
         <p className="text-stone-500 font-medium text-lg">愿你在静默的生长中找到力量。</p>
       </header>
+
+      {/* Hero CTA Card */}
+      <div className="mb-12 fade-in delay-75">
+        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#111827] to-[#1F2937] p-10 shadow-xl shadow-emerald-900/10 group cursor-pointer border border-stone-800" onClick={() => setView(AppView.CHAT)}>
+          <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+            <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" /></svg>
+          </div>
+          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest mb-4 border border-emerald-500/20">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                今日指引
+              </div>
+              <h2 className="text-3xl font-black text-white mb-2 leading-tight">
+                准备好转化你的情绪了吗？
+              </h2>
+              <p className="text-stone-400 font-medium text-lg max-w-lg">
+                每一次负面情绪，都是一颗待发芽的智慧种子。
+              </p>
+            </div>
+            <button className="px-8 py-4 bg-white text-[#111827] rounded-2xl font-black text-lg shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-3 group-hover:shadow-emerald-500/20">
+              <Sparkles className="text-emerald-600" size={20} />
+              立即开始
+            </button>
+          </div>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Bento Stats Group */}
@@ -507,8 +534,8 @@ export default function App() {
           >
             <div
               className={`max-w-[70%] p-6 rounded-[1.5rem] text-[15px] font-medium leading-relaxed shadow-sm ${msg.role === 'user'
-                  ? 'bg-[#111827] text-white rounded-tr-sm'
-                  : 'bg-[#f9fafb] text-[#111827] rounded-tl-sm border border-stone-100'
+                ? 'bg-[#111827] text-white rounded-tr-sm'
+                : 'bg-[#f9fafb] text-[#111827] rounded-tl-sm border border-stone-100'
                 }`}
             >
               {msg.text}

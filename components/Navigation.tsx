@@ -25,14 +25,16 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, setView, inventory
         <button
           onClick={() => setView(AppView.CHAT)}
           className={`
-            w-full flex items-center gap-3 px-3 py-3 rounded-lg border border-white/20 hover:bg-white/10 transition-all group
-            ${currentView === AppView.CHAT ? 'bg-white/10 border-white/40' : 'bg-transparent'}
-          `}
+              w-full flex items-center justify-center gap-3 px-3 py-4 rounded-xl transition-all group relative overflow-hidden shadow-lg shadow-emerald-500/30
+              bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400
+              ${currentView === AppView.CHAT ? 'ring-2 ring-white/30' : ''}
+            `}
         >
-          <div className="bg-emerald-500/20 p-1.5 rounded-md text-emerald-400 group-hover:scale-110 transition-transform">
-            <Plus size={18} />
+          <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+          <div className="bg-white/20 p-1.5 rounded-lg text-white group-hover:scale-110 transition-transform animate-pulse">
+            <Plus size={20} className="stroke-[3px]" />
           </div>
-          <span className="text-sm font-semibold tracking-tight">开启新转化</span>
+          <span className="text-base font-bold tracking-wide text-white drop-shadow-sm">开启新转化</span>
         </button>
       </div>
 
@@ -41,7 +43,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, setView, inventory
         <div className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] mb-4 mt-4 px-3">
           智慧漫游
         </div>
-        
+
         {navItems.map((item) => {
           const isActive = currentView === item.view;
           return (
@@ -53,8 +55,8 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, setView, inventory
                 ${isActive ? 'bg-[#2b2b2b] text-white' : 'text-white/60 hover:bg-[#2b2b2b] hover:text-white'}
               `}
             >
-              <item.icon 
-                size={18} 
+              <item.icon
+                size={18}
                 className={isActive ? 'text-emerald-400' : 'text-white/40 group-hover:text-white'}
               />
               {item.label}
@@ -64,40 +66,40 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, setView, inventory
         })}
 
         <div className="mt-8 border-t border-white/5 pt-6">
-           <div className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] mb-4 px-3">
+          <div className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] mb-4 px-3">
             近期心迹
-           </div>
-           {/* Placeholder for history-like items similar to GPT sidebar */}
-           <div className="px-3 py-2 rounded-lg text-xs text-white/40 hover:bg-[#2b2b2b] hover:text-white cursor-pointer truncate flex items-center gap-3">
-              <History size={14} />
-              解决被经理责骂...
-           </div>
-           <div className="px-3 py-2 rounded-lg text-xs text-white/40 hover:bg-[#2b2b2b] hover:text-white cursor-pointer truncate flex items-center gap-3">
-              <History size={14} />
-              社交焦虑重构...
-           </div>
+          </div>
+          {/* Placeholder for history-like items similar to GPT sidebar */}
+          <div className="px-3 py-2 rounded-lg text-xs text-white/40 hover:bg-[#2b2b2b] hover:text-white cursor-pointer truncate flex items-center gap-3">
+            <History size={14} />
+            解决被经理责骂...
+          </div>
+          <div className="px-3 py-2 rounded-lg text-xs text-white/40 hover:bg-[#2b2b2b] hover:text-white cursor-pointer truncate flex items-center gap-3">
+            <History size={14} />
+            社交焦虑重构...
+          </div>
         </div>
       </nav>
 
       {/* Bottom User Area */}
       <div className="p-3 mt-auto border-t border-white/5 bg-[#000000]/20">
         <div className="flex flex-col gap-1 mb-4">
-           <div className="flex items-center justify-between px-3 py-2 bg-white/5 rounded-lg border border-white/5">
-              <div className="flex items-center gap-2">
-                 <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-                 <span className="text-xs font-bold text-white/60">当前心力</span>
-              </div>
-              <span className="text-sm font-black text-emerald-400">{inventory}</span>
-           </div>
+          <div className="flex items-center justify-between px-3 py-2 bg-white/5 rounded-lg border border-white/5">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+              <span className="text-xs font-bold text-white/60">当前心力</span>
+            </div>
+            <span className="text-sm font-black text-emerald-400">{inventory}</span>
+          </div>
         </div>
 
         <div className="w-full flex items-center gap-3 px-3 py-3 rounded-lg group">
           <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
-             <User size={18} />
+            <User size={18} />
           </div>
           <div className="flex flex-col items-start min-w-0 flex-1">
-             <span className="text-sm font-semibold truncate w-full">{userEmail || "冥想行者"}</span>
-             <span className="text-[10px] text-white/30 font-bold uppercase tracking-widest leading-none mt-0.5">Free Plan</span>
+            <span className="text-sm font-semibold truncate w-full">{userEmail || "冥想行者"}</span>
+            <span className="text-[10px] text-white/30 font-bold uppercase tracking-widest leading-none mt-0.5">Free Plan</span>
           </div>
           {onSignOut && (
             <button onClick={onSignOut} className="p-2 rounded-lg hover:bg-white/10 text-white/40 hover:text-white shrink-0" title="退出登录">
