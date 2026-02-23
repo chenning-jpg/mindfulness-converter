@@ -57,6 +57,7 @@ export default function App() {
   const [myCollection, setMyCollection] = useState<CommunityFruit[]>([]);
   const [isCelebrating, setIsCelebrating] = useState(false);
   const [showInventoryPlusOne, setShowInventoryPlusOne] = useState(false);
+  const [isTransforming, setIsTransforming] = useState(false);
 
   const [inventory, setInventory] = useState(0);
   const [stats, setStats] = useState({
@@ -307,6 +308,15 @@ export default function App() {
       setWisdomArchive((prev: Wisdom[]) => [newWisdomEntry, ...prev]);
       setNewWisdom(newWisdomEntry);
 
+      // 触发全屏转场动画
+      setIsTransforming(true);
+      setTimeout(() => {
+        setShowWisdomModal(true);
+      }, 1200); // 在光影最亮时弹出卡片
+      setTimeout(() => {
+        setIsTransforming(false);
+      }, 2800); // 动效结束时彻底移除遮罩
+
       chatSessionRef.current = createChatSession();
       setMessages([{
         id: Date.now().toString(),
@@ -327,8 +337,6 @@ export default function App() {
           console.error("Sync wisdom/tree failed", err);
         }
       }
-
-      setShowWisdomModal(true);
     } catch (e) {
       const msg = e instanceof Error ? e.message : "生成失败，请稍后重试";
       setChatError(msg.includes("429") || msg.includes("请求过于频繁") ? "请求过于频繁，请稍后再试" : msg);
@@ -704,7 +712,11 @@ export default function App() {
   );
 
   return (
-    <div className="flex min-h-screen bg-[#ffffff] text-[#111827] relative">
+    <div className="flex min-h-screen bg-[#ffffff] text-[#111827] relative overflow-hidden">
+      {/* 灵光绽放全屏转场遮罩 */}
+      {isTransforming && (
+        <div className="fixed inset-0 pointer-events-none z-[9999] animate-bloom" />
+      )}
       <Navigation
         currentView={view}
         setView={setView}
