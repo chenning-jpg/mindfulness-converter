@@ -454,23 +454,23 @@ export default function App() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Bento Stats Group */}
-        <div className="lg:col-span-1 space-y-6 fade-in">
-          <div className="bg-[#E3F2E1] p-8 rounded-[2.5rem] flex flex-col justify-between h-52 bento-card shadow-sm border border-stone-100">
-            <div className="bg-white/40 w-12 h-12 rounded-2xl flex items-center justify-center text-emerald-700">
-              <Archive size={24} />
+        <div className="lg:col-span-1 grid grid-cols-2 lg:grid-cols-1 gap-4 lg:gap-6 fade-in">
+          <div className="bg-[#E3F2E1] p-6 lg:p-8 rounded-3xl lg:rounded-[2.5rem] flex flex-col justify-between h-44 lg:h-52 bento-card shadow-sm border border-stone-100">
+            <div className="bg-white/40 w-10 h-10 lg:w-12 lg:h-12 rounded-xl lg:rounded-2xl flex items-center justify-center text-emerald-700">
+              <Archive size={20} className="lg:w-6 lg:h-6" />
             </div>
             <div>
-              <div className="text-4xl font-black text-emerald-900 mb-1">{inventory}</div>
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-700/60">心力果实</div>
+              <div className="text-3xl lg:text-4xl font-black text-emerald-900 mb-1">{inventory}</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.1em] lg:tracking-[0.2em] text-emerald-700/60">心力果实</div>
             </div>
           </div>
-          <div className="bg-[#FFF9C4] p-8 rounded-[2.5rem] flex flex-col justify-between h-52 bento-card shadow-sm border border-stone-100">
-            <div className="bg-white/40 w-12 h-12 rounded-2xl flex items-center justify-center text-amber-600">
-              <Gift size={24} />
+          <div className="bg-[#FFF9C4] p-6 lg:p-8 rounded-3xl lg:rounded-[2.5rem] flex flex-col justify-between h-44 lg:h-52 bento-card shadow-sm border border-stone-100">
+            <div className="bg-white/40 w-10 h-10 lg:w-12 lg:h-12 rounded-xl lg:rounded-2xl flex items-center justify-center text-amber-600">
+              <Gift size={20} className="lg:w-6 lg:h-6" />
             </div>
             <div>
-              <div className="text-4xl font-black text-amber-900 mb-1">{stats.collected}</div>
-              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-700/60">共鸣交换</div>
+              <div className="text-3xl lg:text-4xl font-black text-amber-900 mb-1">{stats.collected}</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.1em] lg:tracking-[0.2em] text-amber-700/60">共鸣交换</div>
             </div>
           </div>
         </div>
