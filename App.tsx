@@ -476,7 +476,7 @@ export default function App() {
         </div>
 
         {/* Forest Grid Container */}
-        <div className="lg:col-span-2 bg-[#F9FAFB] rounded-[3rem] p-12 shadow-inner border border-stone-100 min-h-[500px] relative overflow-hidden fade-in delay-100">
+        <div className="lg:col-span-2 bg-[#F9FAFB] rounded-3xl lg:rounded-[3rem] p-6 lg:p-12 shadow-inner border border-stone-100 min-h-[400px] lg:min-h-[500px] relative overflow-hidden fade-in delay-100">
           <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-blue-50/50 to-transparent pointer-events-none"></div>
           <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-y-12 gap-x-4 place-items-end justify-items-center relative z-10">
             {trees.map((tree: Tree) => {
