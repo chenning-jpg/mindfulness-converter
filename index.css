@@ -149,3 +149,37 @@ body {
   transform: scale(1.2);
   transition: all 0.2s;
 }
+
+/* --- 全屏转场动画: 灵光绽放 --- */
+
+@keyframes crystal-bloom {
+  0% {
+    backdrop-filter: blur(0px);
+    background: rgba(255, 255, 255, 0);
+    opacity: 0;
+  }
+
+  30% {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+    opacity: 1;
+  }
+
+  60% {
+    backdrop-filter: blur(25px);
+    background: rgba(167, 243, 208, 0.5);
+    opacity: 1;
+  }
+
+  100% {
+    backdrop-filter: blur(0px);
+    background: rgba(255, 255, 255, 0);
+    opacity: 0;
+  }
+}
+
+.animate-bloom {
+  animation: crystal-bloom 2.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none;
+  z-index: 9999;
+}
