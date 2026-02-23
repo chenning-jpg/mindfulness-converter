@@ -281,8 +281,11 @@ export default function App() {
   };
 
   const endSessionAndTransform = async () => {
+    // 立即启动转场动效
+    setIsTransforming(true);
     setIsExtracting(true);
     setChatError(null);
+
     try {
       const extracted = await extractWisdom(messages);
       const newWisdomEntry: Wisdom = {
@@ -308,14 +311,14 @@ export default function App() {
       setWisdomArchive((prev: Wisdom[]) => [newWisdomEntry, ...prev]);
       setNewWisdom(newWisdomEntry);
 
-      // 触发全屏转场动画
-      setIsTransforming(true);
+      // 在动画光影扩散至最亮处时（约 1.2s）弹出卡片并结束转场
       setTimeout(() => {
         setShowWisdomModal(true);
-      }, 1200); // 在光影最亮时弹出卡片
+      }, 1200);
+
       setTimeout(() => {
         setIsTransforming(false);
-      }, 2800); // 动效结束时彻底移除遮罩
+      }, 2800);
 
       chatSessionRef.current = createChatSession();
       setMessages([{
@@ -338,6 +341,7 @@ export default function App() {
         }
       }
     } catch (e) {
+      setIsTransforming(false); // 发生错误时立即取消遮罩
       const msg = e instanceof Error ? e.message : "生成失败，请稍后重试";
       setChatError(msg.includes("429") || msg.includes("请求过于频繁") ? "请求过于频繁，请稍后再试" : msg);
     } finally {
