@@ -20,13 +20,24 @@ export default function AuthScreen({ onSignIn, onSignUp }: AuthScreenProps) {
     try {
       const fn = mode === "signin" ? onSignIn : onSignUp;
       const { error } = await fn(email, password);
+
       if (error) {
-        setMessage({ type: "error", text: error.message });
+        let errorText = error.message;
+        if (error.message.includes("Email not confirmed")) {
+          errorText = "登录失败：邮箱未验证。请检查您的收件箱，或者联系管理员关闭邮件验证功能。";
+        } else if (error.message.includes("Invalid login credentials")) {
+          errorText = "邮箱或密码错误，请重试。";
+        }
+        setMessage({ type: "error", text: errorText });
       } else if (mode === "signup") {
         // 注册成功后尝试自动登录
         const { error: signInError } = await onSignIn(email, password);
         if (signInError) {
-          setMessage({ type: "success", text: "注册成功，请登录。" });
+          if (signInError.message.includes("Email not confirmed")) {
+            setMessage({ type: "success", text: "注册成功！由于系统设置，请先去邮箱点击验证链接后再登录。" });
+          } else {
+            setMessage({ type: "success", text: "注册成功，请点击下方按钮登录。" });
+          }
           setMode("signin");
         }
       }
@@ -79,9 +90,8 @@ export default function AuthScreen({ onSignIn, onSignUp }: AuthScreenProps) {
 
           {message && (
             <div
-              className={`p-3 rounded-xl text-sm ${
-                message.type === "error" ? "bg-red-50 text-red-700" : "bg-emerald-50 text-emerald-700"
-              }`}
+              className={`p-3 rounded-xl text-sm ${message.type === "error" ? "bg-red-50 text-red-700" : "bg-emerald-50 text-emerald-700"
+                }`}
             >
               {message.text}
             </div>
