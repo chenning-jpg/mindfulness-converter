@@ -461,8 +461,8 @@ export default function App() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Bento Stats Group */}
-        <div className="lg:col-span-1 flex flex-row lg:flex-col gap-3 lg:gap-3 fade-in px-4 lg:px-0 items-start">
-          <div className="flex-none w-full bg-[#E3F2E1] p-3 lg:p-4 rounded-xl lg:rounded-[1.25rem] flex flex-row lg:flex-col items-center lg:items-start justify-between h-14 lg:h-20 bento-card shadow-sm border border-stone-100 min-w-0">
+        <div className="lg:col-span-1 flex flex-row lg:flex-col gap-3 lg:gap-3 fade-in px-4 lg:px-0">
+          <div className="flex-1 bg-[#E3F2E1] p-3 lg:p-5 rounded-xl lg:rounded-[1.5rem] flex flex-row lg:flex-col items-center lg:items-start justify-between h-16 lg:h-24 bento-card shadow-sm border border-stone-100 min-w-0">
             <div className="bg-white/40 w-8 h-8 lg:w-10 lg:h-10 rounded-lg lg:rounded-xl flex items-center justify-center text-emerald-700">
               <Archive size={16} className="lg:w-5 lg:h-5" />
             </div>
@@ -478,7 +478,7 @@ export default function App() {
               <div className="text-[8px] lg:text-[9px] font-black uppercase tracking-wider lg:tracking-[0.1em] text-emerald-700/60 truncate mt-0.5">心力果实</div>
             </div>
           </div>
-          <div className="flex-none w-full bg-[#FFF9C4] p-3 lg:p-4 rounded-xl lg:rounded-[1.25rem] flex flex-row lg:flex-col items-center lg:items-start justify-between h-14 lg:h-20 bento-card shadow-sm border border-stone-100 min-w-0">
+          <div className="flex-1 bg-[#FFF9C4] p-3 lg:p-5 rounded-xl lg:rounded-[1.5rem] flex flex-row lg:flex-col items-center lg:items-start justify-between h-16 lg:h-24 bento-card shadow-sm border border-stone-100 min-w-0">
             <div className="bg-white/40 w-8 h-8 lg:w-10 lg:h-10 rounded-lg lg:rounded-xl flex items-center justify-center text-amber-600">
               <Gift size={16} className="lg:w-5 lg:h-5" />
             </div>
