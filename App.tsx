@@ -704,7 +704,11 @@ export default function App() {
   );
 
   return (
-    <div className="flex min-h-screen bg-[#ffffff] text-[#111827]">
+    <div className="flex min-h-screen bg-[#ffffff] text-[#111827] relative">
+      {/* 部署探测器 - 验证修改是否生效 */}
+      <div className="fixed top-0 left-0 right-0 bg-red-600 text-white text-[10px] font-bold text-center py-0.5 z-[9999] pointer-events-none">
+        DEPLOYMENT SYNC TEST: ACTIVE
+      </div>
       <Navigation
         currentView={view}
         setView={setView}
