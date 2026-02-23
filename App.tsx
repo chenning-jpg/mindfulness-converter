@@ -461,30 +461,30 @@ export default function App() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Bento Stats Group */}
-        <div className="lg:col-span-1 flex flex-row lg:flex-col gap-3 lg:gap-4 fade-in px-4 lg:px-0">
-          <div className="flex-1 bg-[#E3F2E1] p-4 lg:p-6 rounded-2xl lg:rounded-[2rem] flex flex-col justify-between h-28 lg:h-36 bento-card shadow-sm border border-stone-100 min-w-0">
-            <div className="bg-white/40 w-9 h-9 lg:w-12 lg:h-12 rounded-lg lg:rounded-2xl flex items-center justify-center text-emerald-700">
-              <Archive size={18} className="lg:w-6 lg:h-6" />
+        <div className="lg:col-span-1 flex flex-row lg:flex-col gap-3 lg:gap-3 fade-in px-4 lg:px-0">
+          <div className="flex-1 bg-[#E3F2E1] p-3 lg:p-5 rounded-xl lg:rounded-[1.5rem] flex flex-row lg:flex-col items-center lg:items-start justify-between h-16 lg:h-24 bento-card shadow-sm border border-stone-100 min-w-0">
+            <div className="bg-white/40 w-8 h-8 lg:w-10 lg:h-10 rounded-lg lg:rounded-xl flex items-center justify-center text-emerald-700">
+              <Archive size={16} className="lg:w-5 lg:h-5" />
             </div>
-            <div>
+            <div className="flex-1 lg:flex-none text-right lg:text-left ml-4 lg:ml-0">
               <div className="relative inline-flex items-center">
-                <div className="text-2xl lg:text-4xl font-black text-emerald-900 mb-0.5">{inventory}</div>
+                <div className="text-xl lg:text-3xl font-black text-emerald-900 leading-none">{inventory}</div>
                 {showInventoryPlusOne && (
-                  <div className="absolute left-full ml-2 lg:ml-4 text-2xl lg:text-4xl font-black text-rose-500 animate-plus-one-side whitespace-nowrap z-50">
+                  <div className="absolute left-full ml-2 lg:ml-4 text-xl lg:text-3xl font-black text-rose-500 animate-plus-one-side whitespace-nowrap z-50">
                     +1
                   </div>
                 )}
               </div>
-              <div className="text-[9px] lg:text-[10px] font-black uppercase tracking-wider lg:tracking-[0.2em] text-emerald-700/60 truncate">心力果实</div>
+              <div className="text-[8px] lg:text-[9px] font-black uppercase tracking-wider lg:tracking-[0.1em] text-emerald-700/60 truncate mt-0.5">心力果实</div>
             </div>
           </div>
-          <div className="flex-1 bg-[#FFF9C4] p-4 lg:p-6 rounded-2xl lg:rounded-[2rem] flex flex-col justify-between h-28 lg:h-36 bento-card shadow-sm border border-stone-100 min-w-0">
-            <div className="bg-white/40 w-9 h-9 lg:w-12 lg:h-12 rounded-lg lg:rounded-2xl flex items-center justify-center text-amber-600">
-              <Gift size={18} className="lg:w-6 lg:h-6" />
+          <div className="flex-1 bg-[#FFF9C4] p-3 lg:p-5 rounded-xl lg:rounded-[1.5rem] flex flex-row lg:flex-col items-center lg:items-start justify-between h-16 lg:h-24 bento-card shadow-sm border border-stone-100 min-w-0">
+            <div className="bg-white/40 w-8 h-8 lg:w-10 lg:h-10 rounded-lg lg:rounded-xl flex items-center justify-center text-amber-600">
+              <Gift size={16} className="lg:w-5 lg:h-5" />
             </div>
-            <div>
-              <div className="text-2xl lg:text-4xl font-black text-amber-900 mb-0.5">{stats.collected}</div>
-              <div className="text-[9px] lg:text-[10px] font-black uppercase tracking-wider lg:tracking-[0.2em] text-amber-700/60 truncate">共鸣交换</div>
+            <div className="flex-1 lg:flex-none text-right lg:text-left ml-4 lg:ml-0">
+              <div className="text-xl lg:text-3xl font-black text-amber-900 leading-none">{stats.collected}</div>
+              <div className="text-[8px] lg:text-[9px] font-black uppercase tracking-wider lg:tracking-[0.1em] text-amber-700/60 truncate mt-0.5">共鸣交换</div>
             </div>
           </div>
         </div>
