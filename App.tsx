@@ -56,6 +56,7 @@ export default function App() {
   const [communityInventory, setCommunityInventory] = useState<CommunityFruit[]>(MOCK_COMMUNITY_FRUITS);
   const [myCollection, setMyCollection] = useState<CommunityFruit[]>([]);
   const [isCelebrating, setIsCelebrating] = useState(false);
+  const [showInventoryPlusOne, setShowInventoryPlusOne] = useState(false);
 
   const [inventory, setInventory] = useState(0);
   const [stats, setStats] = useState({
@@ -344,6 +345,12 @@ export default function App() {
           if (user?.id) supabaseData.upsertUserStats(user.id, { inventory: inv + 1 }).catch(console.error);
           return inv + 1;
         });
+
+        // 触发卡片位置的 +1 动画
+        setShowInventoryPlusOne(false);
+        setTimeout(() => setShowInventoryPlusOne(true), 10);
+        setTimeout(() => setShowInventoryPlusOne(false), 800);
+
         if (user?.id) supabaseData.updateTree(user.id, updated).catch(console.error);
         return updated;
       }
@@ -460,7 +467,14 @@ export default function App() {
               <Archive size={18} className="lg:w-6 lg:h-6" />
             </div>
             <div>
-              <div className="text-2xl lg:text-4xl font-black text-emerald-900 mb-0.5">{inventory}</div>
+              <div className="relative inline-flex items-center">
+                <div className="text-2xl lg:text-4xl font-black text-emerald-900 mb-0.5">{inventory}</div>
+                {showInventoryPlusOne && (
+                  <div className="absolute left-full ml-2 lg:ml-4 text-2xl lg:text-4xl font-black text-rose-500 animate-plus-one-side whitespace-nowrap z-50">
+                    +1
+                  </div>
+                )}
+              </div>
               <div className="text-[9px] lg:text-[10px] font-black uppercase tracking-wider lg:tracking-[0.2em] text-emerald-700/60 truncate">心力果实</div>
             </div>
           </div>
@@ -476,7 +490,7 @@ export default function App() {
         </div>
 
         {/* Forest Grid Container */}
-        <div className="lg:col-span-2 bg-[#F9FAFB] rounded-3xl lg:rounded-[3rem] p-6 lg:p-12 shadow-inner border border-stone-100 min-h-[400px] lg:min-h-[500px] relative overflow-hidden fade-in delay-100">
+        <div className="lg:col-span-2 bg-[#F9FAFB] rounded-3xl lg:rounded-[3rem] p-6 lg:p-12 shadow-inner border border-stone-100 min-h-[400px] lg:min-h-[500px] relative overflow-visible fade-in delay-100 z-10">
           <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-blue-50/50 to-transparent pointer-events-none"></div>
           <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-y-12 gap-x-4 place-items-end justify-items-center relative z-10">
             {trees.map((tree: Tree) => {

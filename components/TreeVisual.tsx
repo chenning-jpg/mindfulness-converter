@@ -21,10 +21,10 @@ const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onClick }) => {
       e.stopPropagation();
       if (!isCollecting) {
         setIsCollecting(true);
-        // Play animation for 600ms, then trigger the actual harvest logic (which is passed via onClick)
+        // Play tree-side collection animation (600ms)
         setTimeout(() => {
           if (onClick) onClick();
-        }, 600); 
+        }, 600);
       }
     } else {
       if (onClick) onClick();
@@ -293,69 +293,12 @@ const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onClick }) => {
     }
   };
 
-  // Define animations locally
-  const styles = `
-    @keyframes grow-pop {
-      0% { opacity: 0; transform: scale(0.4) translateY(20px); }
-      60% { opacity: 1; transform: scale(1.1) translateY(-5px); }
-      100% { opacity: 1; transform: scale(1) translateY(0); }
-    }
-    @keyframes sway {
-      0% { transform: rotate(0deg); }
-      25% { transform: rotate(1deg); }
-      75% { transform: rotate(-1deg); }
-      100% { transform: rotate(0deg); }
-    }
-    @keyframes fruit-appear {
-      0% { transform: scale(0); opacity: 0; }
-      60% { transform: scale(1.3); opacity: 1; }
-      80% { transform: scale(0.9); }
-      100% { transform: scale(1); }
-    }
-    @keyframes fruit-collect {
-      0% { transform: scale(1) translateY(0); opacity: 1; }
-      20% { transform: scale(1.4) translateY(-5px); filter: brightness(1.3); }
-      100% { transform: scale(0) translateY(-40px); opacity: 0; }
-    }
-
-    .animate-grow {
-      animation: grow-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-      transform-origin: bottom center;
-    }
-    .animate-sway {
-      animation: sway 4s ease-in-out infinite;
-      transform-origin: bottom center;
-    }
-    
-    .fruit-base {
-      transform-origin: center;
-      transform-box: fill-box;
-    }
-    
-    .animate-fruit-appear {
-      animation: fruit-appear 0.6s ease-out backwards;
-    }
-    
-    .animate-fruit-collect {
-      animation: fruit-collect 0.6s ease-in forwards;
-      pointer-events: none; /* Prevent double clicks */
-    }
-
-    .fruit-interactive:hover {
-      filter: brightness(1.2);
-      transform: scale(1.2);
-      transition: all 0.2s;
-    }
-  `;
-
-
   return (
     <div
       onClick={handleInteraction}
       className="relative flex items-end justify-center transition-transform hover:scale-105 cursor-pointer group"
       style={{ width: '100px', height: '120px' }}
     >
-      <style>{styles}</style>
       {getTreeSVG()}
       <div className="absolute -bottom-2 w-16 h-3 bg-black/5 rounded-[100%] blur-[4px] group-hover:bg-black/10 transition-colors"></div>
     </div>
